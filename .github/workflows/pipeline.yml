@@ -26,3 +26,7 @@ jobs:
       - name: Check style # name of step is optional, if not provided will take name "npm run eslint"
         run: npm run eslint
       # after env has been set up we can run all scripts from package.json like we would on local machine.
+      - name: Build
+        run: npm run build
+      - name: Test
+        run: npm run test
