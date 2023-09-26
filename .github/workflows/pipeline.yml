@@ -20,13 +20,17 @@ jobs:
           node-version: "16"
       # as app written in javascript, node.js must be set up to be able to utilize the commands specified in package.json
       # we set the node verison to match the version the app is using in production environment
-      - name: Install dependencies
+      - name: install dependencies
         run: npm install
       # lastly we install app dependencies, just as we do on local machine with npm install
-      - name: Check style # name of step is optional, if not provided will take name "npm run eslint"
+      - name: lint # name of step is optional, if not provided will take name "npm run eslint"
         run: npm run eslint
       # after env has been set up we can run all scripts from package.json like we would on local machine.
-      - name: Build
+      - name: build
         run: npm run build
-      - name: Test
-        run: npm run test
+      - name: e2e tests
+        uses: cypress-io/github-actions@v5
+        with:
+          command: npm run test:e2e
+          start: npm run start-prod # script that starts server
+          wait-on: http://localhost:5000 # before tests are run, server should have started on http://localhost:5000
