@@ -1,0 +1,28 @@
+name: Deployment pipeline
+
+on:
+  push:
+    branches:
+      - master
+      # note that your "main" branch might be called main instead of master
+
+jobs:
+  simple_deployment_pipeline:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      # uses keyword tells workflow to run a specific action
+      # an action is a reusable piece of code, like a function
+      # actions can be defined in repo in a separate file or use ones available in public repos
+      # here we ues a public action actions/checkout with specified version @v3 to avoid potential breaking changes if action gets updated. Checkout: checkout the project source code from git.
+      - uses: actions/setup-node@v3
+        with: # with keyword is used to give paramters to actions
+          node-version: "16"
+      # as app written in javascript, node.js must be set up to be able to utilize the commands specified in package.json
+      # we set the node verison to match the version the app is using in production environment
+      - name: Install dependencies
+        run: npm install
+      # lastly we install app dependencies, just as we do on local machine with npm install
+      - name: Check style # name of step is optional, if not provided will take name "npm run eslint"
+        run: npm run eslint
+      # after env has been set up we can run all scripts from package.json like we would on local machine.
